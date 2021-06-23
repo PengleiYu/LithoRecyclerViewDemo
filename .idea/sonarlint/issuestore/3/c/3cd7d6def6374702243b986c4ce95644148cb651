@@ -1,0 +1,13 @@
+
+M
+java:S1128"+Remove this unused import 'java.util.List'.(Õë±Äøÿÿÿÿ8Å ”£/
+L
+java:S1874"/Remove this use of "Handler"; it is deprecated.(„ÑñŒ8ıÃ•£/
+E
+java:S1604"(Make this anonymous inner class a lambda(„ÑñŒ8Å ”£/
+E
+java:S1604#"(Make this anonymous inner class a lambda(„ÑñŒ8Å ”£/
+G
+java:S1068"%Remove this unused "r" private field.(£¶ìßşÿÿÿÿ8Å ”£/
+L
+java:S1874#"/Remove this use of "Handler"; it is deprecated.(„ÑñŒ8ıÃ•£/
