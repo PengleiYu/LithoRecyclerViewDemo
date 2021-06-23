@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
+    id 'kotlin-kapt'
 }
 
 android {
@@ -43,16 +44,16 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
-    implementation 'com.facebook.litho:litho-core:0.12.0'
-    implementation 'com.facebook.litho:litho-widget:0.12.0'
-    compileOnly 'com.facebook.litho:litho-annotations:0.12.0'
-    annotationProcessor 'com.facebook.litho:litho-processor:0.12.0'
+    implementation 'com.facebook.litho:litho-core:0.40.0'
+    implementation 'com.facebook.litho:litho-widget:0.40.0'
+    compileOnly 'com.facebook.litho:litho-annotations:0.40.0'
+    kapt 'com.facebook.litho:litho-processor:0.40.0'
 
-    implementation 'com.facebook.litho:litho-sections-core:0.12.0'
-    implementation 'com.facebook.litho:litho-sections-widget:0.12.0'
-    compileOnly 'com.facebook.litho:litho-sections-annotations:0.12.0'
-    annotationProcessor 'com.facebook.litho:litho-sections-processor:0.12.0'
+    implementation 'com.facebook.litho:litho-sections-core:0.40.0'
+    implementation 'com.facebook.litho:litho-sections-widget:0.40.0'
+    compileOnly 'com.facebook.litho:litho-sections-annotations:0.40.0'
+    kapt 'com.facebook.litho:litho-sections-processor:0.40.0'
 
     // Since Litho uses Yoga, to load native code it uses SoLoader
-    implementation 'com.facebook.soloader:soloader:0.2.0'
+    implementation 'com.facebook.soloader:soloader:0.9.0'
 }

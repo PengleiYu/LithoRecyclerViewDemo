@@ -5,19 +5,16 @@ import androidx.appcompat.app.AppCompatActivity
 import com.facebook.litho.Component
 import com.facebook.litho.ComponentContext
 import com.facebook.litho.LithoView
-import com.facebook.litho.sections.SectionContext
-import com.facebook.litho.sections.widget.RecyclerCollectionComponent
+import com.utopia.demolithorecyclerview.spec.ProgressLayout
 
 class MainActivity : AppCompatActivity() {
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 //    setContentView(R.layout.activity_main)
-    val c: ComponentContext = ComponentContext(this);
-    val component: Component = RecyclerCollectionComponent.create(c)
-//        .section(ListSection.create(SectionContext(c)).build())
-        .build()
+        val c: ComponentContext = ComponentContext(this);
+        val component: Component = ProgressLayout.create(c).build()
 
-    val lithoView: LithoView = LithoView.create(c, component);
-    setContentView(lithoView);
-  }
+        val lithoView: LithoView = LithoView.create(c, component);
+        setContentView(lithoView);
+    }
 }
