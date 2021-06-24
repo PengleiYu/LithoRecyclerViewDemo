@@ -26,7 +26,7 @@ class DataService {
         }
     }
 
-    private fun getData(start: Int, count: Int): FeedModel {
+    fun getData(start: Int, count: Int): FeedModel {
         val feeds = (start..start + count).map(this::generateFeed)
         return FeedModel(feeds)
     }
