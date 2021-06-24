@@ -1,6 +1,5 @@
 package com.utopia.demolithorecyclerview.spec
 
-import android.os.Handler
 import com.facebook.litho.StateValue
 import com.facebook.litho.annotations.*
 import com.facebook.litho.sections.Children
@@ -64,12 +63,14 @@ class ListSectionSpec {
         @OnBindService
         fun onBindService(c: SectionContext, service: DataService) {
             Timber.d("OnBindService")
+            service.registerLoadingEvent(ListSection.onDataLoaded(c))
         }
 
         @JvmStatic
         @OnUnbindService
         fun onUnbindService(c: SectionContext, service: DataService) {
             Timber.d("OnUnbindService")
+            service.unregisterLoadingEvent()
         }
 
         @JvmStatic
@@ -93,16 +94,9 @@ class ListSectionSpec {
 
         @OnRefresh
         @JvmStatic
-        fun onRefresh(c: SectionContext) {
+        fun onRefresh(c: SectionContext, service: DataService) {
             Timber.d("onRefresh")
-            Handler().postDelayed({
-                val data = DataService().getData(0, 10)
-                ListSection.onDataLoaded(c).dispatchEvent(data)
-            }, 1000)
+            service.reFetch(0, 10)
         }
-
-//        fun onDataLoaded(c:SectionContext,@FromEvent feeds:List<Feed>){
-//
-//        }
     }
 }

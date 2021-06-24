@@ -2,6 +2,7 @@ package com.utopia.demolithorecyclerview.data
 
 import android.os.Handler
 import android.os.Looper
+import com.facebook.litho.EventHandler
 import com.utopia.demolithorecyclerview.R
 import com.utopia.demolithorecyclerview.data.bean.Feed
 import com.utopia.demolithorecyclerview.data.bean.FeedData
@@ -14,15 +15,28 @@ class DataService {
     private val handler by lazy { Handler(Looper.getMainLooper()) }
     private val executor = Executor { handler.postDelayed(it, 2000) }
 
+    private var eventHandler: EventHandler<FeedModel>? = null
+
+    fun registerLoadingEvent(handler: EventHandler<FeedModel>) {
+        eventHandler = handler
+    }
+
+    fun unregisterLoadingEvent() {
+        eventHandler = null
+    }
+
+
     fun fetch(start: Int, count: Int) {
         executor.execute {
-            getData(start, count)
+            val data = getData(start, count)
+            eventHandler?.dispatchEvent(data)
         }
     }
 
     fun reFetch(start: Int, count: Int) {
         executor.execute {
-            getData(start, count)
+            val data = getData(start, count)
+            eventHandler?.dispatchEvent(data)
         }
     }
 
@@ -32,9 +46,10 @@ class DataService {
     }
 
     private fun generateFeed(id: Int): Feed {
+        val offset = Random.nextInt()
         val type: FeedType = when {
-            id % 5 == 0 -> FeedType.AD_FEED
-            id % 3 == 0 -> FeedType.NEWS_FEED
+            (id + offset) % 5 == 0 -> FeedType.AD_FEED
+            (id + offset) % 3 == 0 -> FeedType.NEWS_FEED
             else -> FeedType.PHOTO_FEED
         }
         return Feed(id, type, generateData(type))
