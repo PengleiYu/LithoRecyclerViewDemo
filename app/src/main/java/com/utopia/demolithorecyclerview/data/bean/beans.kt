@@ -1,5 +1,7 @@
 package com.utopia.demolithorecyclerview.data.bean
 
+import com.facebook.litho.annotations.Event
+
 data class FeedData(
     val title: String,
     val description: String,
@@ -19,6 +21,8 @@ data class Feed(
     val data: FeedData,
 )
 
-data class FeedModel(
+@Event
+class FeedModel(
+    @JvmField
     val feeds: List<Feed>,
 )
