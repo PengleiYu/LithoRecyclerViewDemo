@@ -8,6 +8,7 @@ import com.utopia.demolithorecyclerview.data.bean.Feed
 import com.utopia.demolithorecyclerview.data.bean.FeedData
 import com.utopia.demolithorecyclerview.data.bean.FeedModel
 import com.utopia.demolithorecyclerview.data.bean.FeedType
+import timber.log.Timber
 import java.util.concurrent.Executor
 import kotlin.random.Random
 
@@ -27,6 +28,7 @@ class DataService {
 
 
     fun fetch(start: Int, count: Int) {
+        Timber.d("fetch:start=$start,count=$count")
         executor.execute {
             val data = getData(start, count)
             eventHandler?.dispatchEvent(data)
@@ -34,6 +36,7 @@ class DataService {
     }
 
     fun reFetch(start: Int, count: Int) {
+        Timber.d("reFetch:start=$start,count=$count")
         executor.execute {
             val data = getData(start, count)
             eventHandler?.dispatchEvent(data)
@@ -41,7 +44,8 @@ class DataService {
     }
 
     fun getData(start: Int, count: Int): FeedModel {
-        val feeds = (start..start + count).map(this::generateFeed)
+        Timber.d("getData:start=$start,count=$count")
+        val feeds = (start until start + count).map(this::generateFeed)
         return FeedModel(feeds)
     }
 

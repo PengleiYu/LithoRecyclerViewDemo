@@ -26,6 +26,7 @@ class CardElementSpec {
                 .text(title)
                 .build()
             val descComp = Text.create(c)
+                .heightDip(200f)
                 .text(desc)
                 .build()
             return Column.create(c)
