@@ -85,6 +85,8 @@ class ListSectionSpec {
             service.unregisterLoadingEvent()
         }
 
+// ==================UI操作===============
+
         @JvmStatic
         @OnViewportChanged
         fun onViewportChanged(
@@ -96,16 +98,22 @@ class ListSectionSpec {
             lastFullyVisibleIndex: Int,
             service: DataService,
             @State feeds: List<Feed>,
+            @State loading: Boolean,
         ) {
             Timber.d("onViewportChanged")
-            Timber.d("firstVisiblePosition=$firstVisiblePosition,lastVisiblePosition=$lastVisiblePosition,totalCount=$totalCount,firstFullyVisibleIndex=$firstFullyVisibleIndex,lastFullyVisibleIndex=$lastFullyVisibleIndex")
-            if (feeds.size == lastFullyVisibleIndex) {
+            Timber.d(
+                """
+                firstVisiblePosition=$firstVisiblePosition,lastVisiblePosition=$lastVisiblePosition,totalCount=$totalCount,firstFullyVisibleIndex=$firstFullyVisibleIndex,lastFullyVisibleIndex=$lastFullyVisibleIndex
+                loading=$loading
+            """.trimIndent()
+            )
+            if (feeds.size == lastFullyVisibleIndex && !loading) {
+                Timber.d("scroll to the bottom, load new data")
                 service.fetch(feeds.size, COUNT_LOAD)
                 ListSection.updateStartParam(c, feeds.size)
+                ListSection.updateLoadingParam(c, true)
             }
         }
-
-// ==================UI操作===============
 
         @OnRefresh
         @JvmStatic
@@ -116,6 +124,7 @@ class ListSectionSpec {
             Timber.d("onRefresh")
             service.reFetch(0, COUNT_LOAD)
             ListSection.updateStartParam(c, 0)
+            ListSection.updateLoadingParam(c, true)
         }
 
 // ==================事件监听===============
@@ -125,6 +134,7 @@ class ListSectionSpec {
         fun onDataLoaded(c: SectionContext, @FromEvent feeds: List<Feed>) {
             Timber.d("onDataLoaded")
             ListSection.updateFeedsParam(c, feeds)
+            ListSection.updateLoadingParam(c, false)
             val state = LoadingEvent.LoadingState.SUCCEEDED
             SectionLifecycle.dispatchLoadingEvent(c, false, state, null)
         }
@@ -140,12 +150,20 @@ class ListSectionSpec {
 
         @JvmStatic
         @OnUpdateState
+        fun updateLoadingParam(loading: StateValue<Boolean>, @Param newLoading: Boolean) {
+            Timber.d("updateLoadingParam")
+            loading.set(newLoading)
+        }
+
+        @JvmStatic
+        @OnUpdateState
         fun updateFeedsParam(
             start: StateValue<Int>,
             feeds: StateValue<List<Feed>>,
             @Param newFeeds: List<Feed>,
         ) {
             Timber.d("updateFeedsParam:startValue=${start.get()}")
+            val oldSize = feeds.get()?.size ?: 0
             if (start.get() == 0) {
                 feeds.set(newFeeds)
             } else {
@@ -155,6 +173,8 @@ class ListSectionSpec {
                 result.addAll(newFeeds)
                 feeds.set(result)
             }
+            val newSize = feeds.get()?.size ?: 0
+            Timber.d("size: $oldSize -> $newSize")
         }
     }
 }
