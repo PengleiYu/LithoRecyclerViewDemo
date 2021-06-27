@@ -1,5 +1,6 @@
 package com.utopia.demolithorecyclerview.spec
 
+import android.graphics.Color
 import com.facebook.litho.StateValue
 import com.facebook.litho.annotations.*
 import com.facebook.litho.sections.Children
@@ -8,6 +9,7 @@ import com.facebook.litho.sections.SectionContext
 import com.facebook.litho.sections.SectionLifecycle
 import com.facebook.litho.sections.annotations.*
 import com.facebook.litho.sections.common.SingleComponentSection
+import com.facebook.litho.widget.Card
 import com.utopia.demolithorecyclerview.data.DataService
 import com.utopia.demolithorecyclerview.data.bean.Feed
 import com.utopia.demolithorecyclerview.data.bean.FeedModel
@@ -47,11 +49,17 @@ class ListSectionSpec {
                     SingleComponentSection.create(c)
                         .key("${it.id}")
                         .component(
-                            CardElement.create(c)
-                                .title(it.data.title)
-                                .desc(it.data.description)
-                                .id(it.id)
-                                .type(it.type)
+                            Card.create(c)
+                                .content(
+                                    CardElement.create(c)
+                                        .title(it.data.title)
+                                        .desc(it.data.description)
+                                        .id(it.id)
+                                        .photos(it.data.photos)
+                                        .type(it.type)
+                                )
+                                .elevationDip(6f)
+                                .cardBackgroundColor(Color.WHITE)
                         )
                 )
             }
@@ -66,9 +74,7 @@ class ListSectionSpec {
         @OnCreateService
         fun onCreateService(c: SectionContext, @State start: Int): DataService {
             Timber.d("onCreateService")
-            val dataService = DataService()
-            dataService.fetch(start, COUNT_LOAD)
-            return dataService
+            return DataService()
         }
 
         @JvmStatic
