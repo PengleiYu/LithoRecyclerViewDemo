@@ -15,7 +15,7 @@ class MainActivity : AppCompatActivity() {
         val c = ComponentContext(this)
         val component: Component =
             RecyclerCollectionComponent.create(c)
-                .section(ListSection.create(SectionContext(c)).build())
+                .section(ListSection.create(SectionContext(c)))
                 .build()
 
         val lithoView: LithoView = LithoView.create(c, component);

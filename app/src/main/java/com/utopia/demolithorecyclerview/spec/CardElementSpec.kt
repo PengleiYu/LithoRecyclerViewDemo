@@ -4,13 +4,19 @@ import android.graphics.Color
 import android.graphics.Typeface
 import android.text.TextUtils
 import android.widget.ImageView
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.facebook.litho.Column
 import com.facebook.litho.Component
 import com.facebook.litho.ComponentContext
-import com.facebook.litho.annotations.LayoutSpec
-import com.facebook.litho.annotations.OnCreateLayout
-import com.facebook.litho.annotations.Prop
+import com.facebook.litho.annotations.*
+import com.facebook.litho.sections.SectionContext
+import com.facebook.litho.sections.common.DataDiffSection
+import com.facebook.litho.sections.common.RenderEvent
+import com.facebook.litho.sections.widget.ListRecyclerConfiguration
+import com.facebook.litho.sections.widget.RecyclerCollectionComponent
+import com.facebook.litho.widget.ComponentRenderInfo
 import com.facebook.litho.widget.Image
+import com.facebook.litho.widget.RenderInfo
 import com.facebook.litho.widget.Text
 import com.facebook.yoga.YogaEdge.*
 import com.utopia.demolithorecyclerview.R
@@ -46,10 +52,14 @@ class CardElementSpec {
                 .ellipsize(TextUtils.TruncateAt.END)
                 .maxLines(4)
                 .build()
-            val drawable = if (photos.isEmpty()) R.mipmap.ic_launcher else photos[0]
+
             return Column.create(c)
                 .child(titleComp)
-                .child(getImageComp(c, drawable))
+                .child(
+                    if (type == FeedType.PHOTO_FEED)
+                        getRecyclerComp(c, photos)
+                    else getImageComp(c, photos[0])
+                )
                 .child(descComp)
                 .build()
         }
@@ -60,6 +70,30 @@ class CardElementSpec {
                 .heightDip(200f)
                 .scaleType(ImageView.ScaleType.CENTER_CROP)
                 .drawableRes(imageRes)
+                .build()
+        }
+
+        private fun getRecyclerComp(c: ComponentContext, imageResList: List<Int>): Component {
+            return RecyclerCollectionComponent.create(c)
+                .heightDip(200f)
+                .recyclerConfiguration(
+                    ListRecyclerConfiguration.create()
+                        .orientation(LinearLayoutManager.HORIZONTAL)
+                        .build()
+                )
+                .section(
+                    DataDiffSection.create<Int>(SectionContext(c))
+                        .data(imageResList)
+                        .renderEventHandler(CardElement.onRenderImage(c))
+                )
+                .build()
+        }
+
+        @JvmStatic
+        @OnEvent(RenderEvent::class)
+        fun onRenderImage(c: ComponentContext, @FromEvent model: Int): RenderInfo {
+            return ComponentRenderInfo.create()
+                .component(getImageComp(c, model))
                 .build()
         }
     }
